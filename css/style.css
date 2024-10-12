@@ -1,0 +1,1428 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "Kurale", serif;
+    font-size: 20px;
+    text-decoration: none;
+    text-transform: none;
+    transition: .5s;
+}
+
+.w {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.py {
+    padding: 60px 0;
+}
+
+.btn {
+    border: 2px solid white;
+    color: white;
+    padding: 5px 20px;
+}
+
+.btn:hover {
+    border: 2px solid white;
+    color: #43B7F9;
+    background-color: white;
+}
+
+.b {
+    background-color: #43B7F9;
+    color: white;
+    padding: 4px 26px;
+    border: 2px solid #43B7F9;
+}
+
+.b:hover {
+    background-color: white;
+    color: #43B7F9;
+}
+
+h1 {
+    font-size: 40px;
+}
+
+h2 {
+    font-size: 32px;
+    color: #43B7F9;
+    padding-bottom: 26px;
+}
+
+h3 {
+    font-size: 24px;
+    font-weight: normal;
+}
+
+
+header {
+    background-color: #43B7F9;
+    padding: 30px 0;
+    position: relative;
+}
+
+.header_content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.logo {
+    margin-right: 20px;
+}
+
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 70%;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+}
+
+nav a {
+    font-size: 20px;
+    color: white;
+    text-decoration: none;
+}
+
+nav a:hover {
+    color: black;
+}
+
+.dropbtn {
+    background-color: #43B7F9;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    display: block;
+    text-decoration: none;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    display: block;
+    text-decoration: none;
+}
+
+.dropdown-content a:hover {
+    background-color: #ddd;
+}
+
+.show {
+    display: block;
+}
+
+.acc {
+    display: flex;
+    align-items: center;
+    gap: 21px;
+}
+
+.burger-icon {
+    display: none;
+    cursor: pointer;
+    z-index: 1001;
+    position: absolute;
+    right: 20px;
+}
+
+.burger-icon .bar {
+    width: 25px;
+    height: 3px;
+    background-color: white;
+    margin: 6px 0;
+    transition: 0.4s;
+}
+
+.burger-icon.open .bar:nth-child(1) {
+    transform: rotate(45deg);
+    top: 9px;
+    position: absolute;
+}
+
+.burger-icon.open .bar:nth-child(2) {
+    opacity: 0;
+}
+
+.burger-icon.open .bar:nth-child(3) {
+    transform: rotate(-45deg);
+    top: 9px;
+    position: absolute;
+}
+
+.menu {
+    position: fixed;
+    top: 0;
+    display: none;
+    width: 300px;
+    height: 100%;
+    background-color: #43B7F9;
+    box-shadow: -5px 0 10px rgba(0, 0, 0, 0.1);
+    transition: 0.4s;
+    z-index: 1000;
+}
+
+.menu ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 50px 0 0 20px;
+}
+
+.menu ul li {
+    margin: 10px 0;
+}
+
+.menu ul li a {
+    text-decoration: none;
+    color: white;
+    font-size: 20px;
+}
+
+.blur-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(5px);
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.4s;
+    z-index: 999;
+}
+
+.menu.active {
+    right: 0;
+    display: block;
+}
+
+.blur-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.banner {
+    background-image: url(../img/banner/banner.png);
+    height: 700px;
+    background-size: cover;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.banner_content {
+    width: 100%;
+}
+
+.banner_content h1 {
+    width: 800px;
+    padding-bottom: 25px;
+    color: white;
+}
+
+.banner_content .btn {
+    font-size: 24px;
+}
+
+.top_content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 100px;
+}
+
+.img {
+    transition: .7s;
+}
+
+.cart {
+    transition: .7s;
+    position: relative;
+}
+
+.about_text {
+    width: 100%;
+    text-align: center;
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    z-index: 1000;
+    transform: translate3d(0, -50%, 0);
+    transition: .7s;
+}
+
+.about_text a {
+    font-size: 24px;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.cart:hover .img {
+    transform: translate3d(-10px, -10px, 0);
+}
+
+.cart:hover .img img {
+    opacity: .1;
+}
+
+.cart:hover .about_text {
+    opacity: 1;
+}
+
+.img {
+    background: linear-gradient(rgba(0, 0, 0, 0.774), rgba(0, 0, 0, 0.26))
+}
+
+.img img {
+    display: block;
+    width: 100%;
+}
+
+.uslugi_content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 100px;
+}
+
+footer {
+    background-color: #43B7F9;
+}
+
+.footer_content {
+    padding: 60px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+}
+
+.f1 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 80px;
+}
+
+.info_content {
+    display: flex;
+    align-items: center;
+    gap: 56px;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.info a {
+    color: white;
+    font-size: 20px;
+}
+
+.cont {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 5px;
+}
+
+.cont a {
+    font-size: 24px;
+    color: white;
+}
+
+.cont a:hover {
+    color: black;
+}
+
+.cont p {
+    color: white;
+}
+
+.f2 h3 {
+    color: white;
+}
+
+.about {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 78px;
+}
+
+.sotrud_icon {
+    background-color: #43B7F9;
+}
+
+.sotrud_icon marquee {
+    padding: 50px 0;
+}
+
+.sotrud_icon marquee img {
+    padding: 0 50px;
+}
+
+.otzv {
+    display: flex;
+    align-items: center;
+    gap: 33px;
+    padding-top: 40px;
+}
+
+.otzv button {
+    font-size: 68px;
+    background: none;
+    border: none;
+    color: #43B7F9;
+}
+
+.slider {
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+    position: relative;
+}
+
+.slaid {
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+
+.slaid>img {
+    width: 100%;
+}
+
+.slaid.active {
+    display: block;
+}
+
+.dostavca_banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dostavca_banner h1 {
+    color: #43B7F9;
+}
+
+.dos {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.dostavca_info {
+    display: flex;
+    flex-direction: column;
+    gap: 27px;
+}
+
+.dostavca_obv {
+    background-color: #43B7F9;
+    width: 510px;
+    color: white;
+    padding: 25px 70px;
+}
+
+.sales {
+    display: flex;
+    flex-direction: column;
+    gap: 56px;
+}
+
+.sale {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sale:nth-child(2n) {
+    flex-direction: row-reverse;
+}
+
+.sale_content {
+    width: 580px;
+}
+
+.form {
+    width: 750px;
+}
+
+.form form {
+    background: #43B7F9;
+    padding: 48px 105px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 38px;
+}
+
+.form_text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.form_text h2 {
+    color: white;
+    padding-bottom: 0;
+}
+
+.form_text a {
+    color: white;
+    font-size: 24px;
+}
+
+.input_block {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+}
+
+.input_block input {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 15px;
+    width: 607px;
+    height: 37px;
+    border: 1px solid white;
+}
+
+.input_block h3 {
+    color: white;
+}
+
+.form_btn {
+    display: flex;
+    gap: 50px;
+}
+
+.form_btn button {
+    font-size: 24px;
+    padding: 10px 32px;
+    background: white;
+    color: #43B7F9;
+    border: 2px solid white;
+}
+
+.form_btn button:hover {
+    background: #43B7F9;
+    color: white;
+    border: 2px solid white;
+}
+
+.contacts {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.contsct_content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.contact_info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.contact_info a {
+    color: black;
+}
+
+.bascet {
+    display: flex;
+    justify-content: space-between;
+}
+
+.bascet_tovars {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+}
+
+.bascet_tovar {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.bascet_tovar>img {
+    width: 45%;
+}
+
+.t_info {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 11px;
+}
+
+.button_viber {
+    display: flex;
+    align-items: center;
+}
+
+.button_viber input {
+    width: 100px;
+    border: 1px solid black;
+    border-radius: 0;
+    height: 23px;
+    padding: 5px 10px;
+    font-size: 16px;
+}
+
+.button_viber button {
+    background-color: white;
+    width: 35px;
+    height: 35px;
+    border: 1px solid black;
+}
+
+.b_info {
+    background-color: #43B7F9;
+    padding: 20px 100px 28px 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+    gap: 8px;
+    color: white;
+    height: 258px;
+}
+
+.b_info h2 {
+    padding-bottom: 0;
+    color: white;
+}
+
+.b_info .btn {
+    color: #43B7F9;
+    background-color: white;
+}
+
+.b_info .btn:hover {
+    color: white;
+    background-color: #43B7F9;
+    border: 2px solid white;
+}
+
+.oformlenie {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 100px;
+}
+
+.oformlenie_form form {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 28px;
+}
+
+.form_p {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.form_p>input {
+    width: 500px;
+    height: 51px;
+    border: 2px solid #43B7F9;
+    padding: 0 10px;
+}
+
+.vibrs {
+    display: flex;
+    align-items: center;
+    gap: 48px;
+}
+
+.vibr {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.vibr input {
+    border: 1px solid #43B7F9;
+}
+
+.oformlenie_form form .b {
+    font-size: 24px;
+    padding: 10px 25px;
+}
+
+.account_content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.account_form {
+    display: flex;
+    justify-content: space-between;
+    gap: 50px;
+}
+
+.label {
+    display: flex;
+    flex-direction: column;
+    gap: 43px;
+}
+
+.account_form form {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 30px;
+}
+
+.account_form form input {
+    width: 421px;
+    height: 32px;
+    border: 2px solid #43B7F9;
+    padding: 5px 10px;
+}
+
+.acc_foto {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 26px;
+}
+
+.admin_opis {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tovar {
+    width: 265px;
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+}
+
+.tovar img {
+    width: 248px;
+}
+
+.tovar_info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tovar_info .b {
+    padding: 4px 8px;
+}
+
+.perecl {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 87px;
+}
+
+.bot {
+    border: 2px solid #43B7F9;
+    background-color: white;
+    font-size: 24px;
+    color: #43B7F9;
+    padding: 10px 26px;
+}
+
+.perecl .b {
+    font-size: 24px;
+    padding: 10px 26px;
+}
+
+.cat {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 53px;
+}
+
+.cat select {
+    padding: 8px 10px;
+    background-color: white;
+    border: 1px solid white;
+}
+
+.input_block input[type=file] {
+    background-color: white;
+    padding: 50px 10px;
+}
+
+.banner_bag {
+    background-image: url(../img/banner/bag.png);
+    background-size: cover;
+    height: 400px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.b_b_content {
+    background-color: rgba(255, 255, 255, 0.596);
+    padding: 15px 30px;
+}
+
+.bb {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+
+.bb_h2 {
+    text-align: center;
+}
+
+.bb_filt {
+    display: flex;
+    justify-content: space-between;
+}
+
+.bb_filt form input {
+    border: 2px solid #43B7F9;
+    padding: 5px 10px;
+}
+
+#open-modal {
+    background-color: white;
+    border: none;
+    color: #43B7F9;
+    font-size: 24px;
+}
+
+#modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgb(59, 59, 59);
+    display: flex;
+    visibility: hidden;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s;
+    opacity: 0;
+}
+
+#modal-content {
+    background-color: white;
+    padding: 20px 40px;
+    display: flex;
+    flex-direction: column;
+    width: 600px;
+    text-align: center;
+    gap: 20px;
+    position: relative;
+}
+
+#modal.active {
+    visibility: visible;
+    opacity: 1;
+}
+
+#close-modal {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    background-color: white;
+    border: none;
+    color: #43B7F9;
+    font-size: 24px;
+}
+
+.filts {
+    display: flex;
+    justify-content: space-between;
+}
+
+.filt {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.fil {
+    display: flex;
+    gap: 5px;
+}
+
+.f_button {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+.tovars {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 200px;
+    row-gap: 50px;
+}
+
+.ac_bag {
+    background-image: url(../img/banner/ac.png);
+    background-size: cover;
+    height: 400px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.com_bag {
+    background-image: url(../img/banner/com.png);
+    background-size: cover;
+    height: 400px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.bread {
+    display: flex;
+    gap: 10px;
+}
+
+.bread a {
+    color: #43B7F9;
+    font-size: 24px;
+}
+
+.tovar_about {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.t_a_info {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+}
+
+.i {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+}
+
+@media screen and (max-width:1000px) {
+    .w {
+        max-width: 850px;
+        margin: 0 auto;
+    }
+
+    .f1 {
+        gap: 60px;
+    }
+
+    .sale_content {
+        width: 350px;
+    }
+
+    .oformlenie {
+        display: flex;
+        flex-direction: column;
+        gap: 50px;
+    }
+
+    .account_content {
+        display: flex;
+        flex-direction: column-reverse;
+        gap: 50px;
+    }
+}
+
+@media screen and (max-width:850px) {
+    .w {
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    h1 {
+        font-size: 35px;
+    }
+
+    h2 {
+        font-size: 30px;
+        color: #43B7F9;
+        padding-bottom: 26px;
+    }
+
+    h3 {
+        font-size: 20px;
+        font-weight: normal;
+    }
+
+    p {
+        font-size: 16px;
+    }
+
+    .nav {
+        width: 70%;
+    }
+
+    nav a {
+        font-size: 16px;
+    }
+
+    .dropbtn {
+        font-size: 20px;
+    }
+
+    .acc {
+        display: flex;
+        align-items: center;
+        gap: 21px;
+    }
+
+    .acc img {
+        width: 30px;
+    }
+
+    .banner_content .btn {
+        font-size: 20px;
+    }
+
+    .uslugi_content {
+        flex-direction: column;
+        gap: 50px;
+    }
+
+    .footer_content {
+        padding: 60px 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 60px;
+    }
+
+    .f1 {
+        flex-direction: column;
+        gap: 40px;
+    }
+
+    .info_content {
+        justify-content: space-between;
+        gap: 70px;
+    }
+
+    .cont {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 30px;
+    }
+
+    .about {
+        flex-direction: column;
+        gap: 50px;
+    }
+}
+
+@media (max-width: 700px) {
+    
+    .w {
+        max-width: 370px;
+        margin: 0 auto;
+    }
+
+    .nav nav, .nav .acc {
+        display: none;
+    }
+
+    .burger-icon {
+        display: block;
+    }
+
+     .py {
+        padding: 30px 0;
+    }
+
+    .b {
+        padding: 4px 15px;
+        font-size: 16px;
+    }
+
+    .btn {
+        padding: 4px 15px;
+        font-size: 16px;
+    }
+
+    h1 {
+        font-size: 30px;
+    }
+
+    h2 {
+        font-size: 25px;
+        padding-bottom: 20px;
+    }
+
+    h3 {
+        font-size: 16px;
+    }
+
+    p{
+        font-size: 12px;
+    }
+
+    .banner {
+        height: 440px;
+    }
+
+    .banner_content h1 {
+        width: 300px;
+    }
+
+    .banner_content .btn {
+        font-size: 16px;
+    }
+
+    .top_content {
+        gap: 20px;
+    }
+
+    .about_text a {
+        font-size: 10px;
+    }
+    
+
+    .uslugi_content {
+        gap: 20px;
+    }
+
+    .uslugi_content img{
+        width: 90%;
+    }
+
+    .footer_content{
+        gap: 20px;
+    }
+
+    .f1 {
+        gap: 20px;
+    }
+
+    .info_content {
+        gap: 20px;
+    }
+
+    .info a{
+        font-size: 16px;
+    }
+
+    .cont {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .cont a{
+        font-size: 16px;
+    }
+
+    .about {
+        gap: 30px;
+    }
+
+    .about img{
+        width: 90%;
+    }
+
+    .sotrud_icon marquee {
+        padding: 30px 0;
+    }
+
+    .sotrud_icon marquee img {
+        padding: 0 20px;
+        width: 100px;
+    }
+
+    .otzv {
+        gap: 10px;
+        padding-top: 40px;
+    }
+
+    .slider {
+        height: 100px;
+    }
+
+    .dostavca_banner{
+        padding-top: 20px;
+    }
+
+    .dostavca_banner >img{
+        width: 60%;
+    }
+
+    .dostavca_obv {
+        width: 300px;
+        padding: 25px 40px;
+    }
+
+    .sales {
+        gap: 30px;
+    }
+
+    .sale {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .sale:nth-child(2n) {
+        flex-direction: column;
+    }
+
+    .sale_content {
+        width: 100%;
+    }
+
+    .form {
+        width: 90%;
+    }
+
+    .form form {
+        padding: 24px 50px;
+        gap: 19px;
+    }
+
+    .form_text a {
+        color: white;
+        font-size: 16px;
+    }
+
+    .input_block input {
+        padding: 5px 15px;
+        width: 300px;
+        height: 30px;
+    }
+
+    .form_btn button {
+        font-size: 20px;
+        padding: 8px 20px;
+    }
+
+    .contacts {
+        justify-content: center;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .contacts >img{
+        width: 90%;
+    }
+
+    .contsct_content {
+        gap: 10px;
+    }
+
+    .contact_info a {
+        font-size: 16px;
+    }
+
+    .bascet {
+        justify-content: center;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .b_info {
+        padding: 28px 28px;
+        height: 180px;
+    }
+
+    .oformlenie {
+        justify-content: center;
+        flex-direction: column;
+        padding-top: 30px;
+    }
+
+    .oformlenie_form form {
+        gap: 28px;
+    }
+
+    .form_p {
+        gap: 14px;
+    }
+
+    .form_p>input {
+        width: 330px;
+        height: 35px;
+    }
+
+    .oformlenie_form form .b {
+        font-size: 16px;
+        padding: 10px 15px;
+    }
+
+    .account_content {
+        justify-content: center;
+        flex-direction: column-reverse;
+    }
+
+    .account_form {
+        gap: 30px;
+    }
+
+    .label {
+        gap: 43px;
+    }
+
+    .account_form form {
+        gap: 30px;
+    }
+
+    .account_form form input {
+        width: 200px;
+        height: 21px;
+    }
+
+    .acc_foto {
+        gap: 13px;
+    }
+
+    .acc_foto > img{
+        width: 60%;
+    }
+
+    .admin_opis {
+        flex-direction: column;
+        padding-bottom: 20px;
+    }
+
+    .tovar {
+        width: 200px;
+    }
+
+    .tovar img {
+        width: 200px;
+    }
+
+    .perecl {
+        gap: 40px;
+    }
+
+    .bot {
+        font-size: 16px;
+        padding: 10px 15px;
+    }
+
+    .perecl .b {
+        font-size: 16px;
+        padding: 10px 15px;
+    }
+
+    .cat {
+        gap: 10px;
+    }
+
+    .form_text{
+        text-align: center;
+    }
+
+    .cat select {
+        padding: 8px 10px;
+        width: 100px;
+        font-size: 16px;
+    }
+
+    .cat select option{
+        font-size: 16px;
+    }
+
+    .input_block input[type=file] {
+        padding: 25px 5px;
+        font-size: 16px;
+    }
+
+    .bb{
+        gap: 25px;
+    }
+
+    .bb_filt {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .bb_filt form input {
+        padding: 5px;
+        width: 180px;
+        font-size: 16px;
+    }
+
+    #open-modal {
+        font-size: 20px;
+    }
+
+    .tovars {
+        justify-content: center;
+    }
+
+    .bread a {
+        font-size: 16px;
+    }
+
+    .tovar_about {
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    .t_img>img{
+        width: 90%;
+    }
+
+    .t_a_info {
+        gap: 20px;
+    }
+}

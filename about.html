@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sport Ice</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Kurale&display=swap" rel="stylesheet">
+    <script src="js/index.js" defer></script>
+</head>
+
+<body>
+    <header>
+        <div class="header_content w">
+            <div class="logo">
+                <a href="index.html"><img src="img/logo/LOGO.png" alt="Логотип"></a>
+            </div>
+            <div class="nav">
+                <div class="burger-icon" id="burger-icon">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+                <nav>
+                    <a href="about.html">О нас</a>
+                    <div class="dropdown">
+                        <button onclick="myFunction('dropdown1')" class="dropbtn">Каталог</button>
+                        <div id="dropdown1" class="dropdown-content">
+                            <a href="complect.html">Комплекты</a>
+                            <a href="acsess.html">Аксессуары</a>
+                            <a href="bags.html">Сумки</a>
+                        </div>
+                    </div>
+                    <a href="dostavca.html">Доставка</a>
+                    <a href="sale.html">Акции</a>
+                    <a href="uslugi.html">Услуги</a>
+                </nav>
+                <div class="acc">
+                    <a href="sign.html"><img src="img/icon/account.png" alt="Аккаунт"></a>
+                    <a href="bascet.html"><img src="img/icon/basket.png" alt="Корзина"></a>
+                </div>
+            </div>
+        </div>
+        <div class="menu" id="menu">
+            <ul>
+                <li><a href="about.html">О нас</a></li>
+                <li class="dropdown">
+                    <button onclick="myFunction('dropdown2')" class="dropbtn">Каталог</button>
+                    <div id="dropdown2" class="dropdown-content">
+                        <a href="complect.html" style="color: black;">Комплекты</a>
+                        <a href="acsess.html" style="color: black;">Аксессуары</a>
+                        <a href="bags.html" style="color: black;">Сумки</a>
+                    </div>
+                </li>
+                <li><a href="dostavca.html">Доставка</a></li>
+                <li><a href="sale.html">Акции</a></li>
+                <li><a href="uslugi.html">Услуги</a></li>
+                <div class="acc">
+                    <a href="sign.html"><img src="img/icon/account.png" alt="Аккаунт"></a>
+                    <a href="bascet.html"><img src="img/icon/basket.png" alt="Корзина"></a>
+                </div>
+            </ul>
+        </div>
+    </header>
+
+    <div class="blur-overlay" id="blur-overlay"></div>
+    <div class="about w py">
+        <img src="img/about/image.png" alt="">
+        <p>Sport Ice — это особое место, где любители фигурного катания могут найти всё необходимое для занятия своим
+            увлечением. Здесь представлен широкий ассортимент товаров, ориентированных как на новичков, так и на
+            профессионалов.
+            Не забыли мы и о безопасности: в нашем магазине можно приобрести защитные элементы — наколенники,
+            налокотники и шлемы, которые помогут избежать травм во время тренировок и выступлений.</p>
+    </div>
+
+    <div class="sotrud">
+        <div class="sotrud_content w">
+            <h2>Мы сотрудничаем</h2>
+        </div>
+        <div class="sotrud_icon">
+            <marquee loop="-1" scrollamount="10">
+                <img src="img/about/proskating-logo.png" alt="">
+                <img src="img/about/proskating-logo.png" alt="">
+                <img src="img/about/proskating-logo.png" alt="">
+                <img src="img/about/proskating-logo.png" alt="">
+                <img src="img/about/proskating-logo.png" alt="">
+                <img src="img/about/proskating-logo.png" alt="">
+                <img src="img/about/proskating-logo.png" alt="">
+                <img src="img/about/proskating-logo.png" alt="">
+                <img src="img/about/proskating-logo.png" alt="">
+            </marquee>
+        </div>
+    </div>
+
+    <div class="otzvs w py">
+        <h2>Отзывы о нас</h2>
+        <div class="otzv">
+            <button id="prevSlide"><</button>
+                 <div class="slider">
+                    <div class="slaid active"><img src="img/about/otzv.png" alt=""></div>
+                    <div class="slaid"><img src="img/about/otzv2.png" alt=""></div>
+                    <div class="slaid"><img src="img/about/otzv3.png" alt=""></div>
+                </div>
+            <button id="nextSlide">></button>
+        </div>
+    </div>
+    <footer>
+        <div class="footer_content w">
+            <div class="f1">
+                <img src="img/logo/LOGO.png" alt="">
+                <div class="info_content">
+                    <div class="info">
+                        <a href="uslugi.html #zatochca">Заточка коньков</a>
+                        <a href="dostavca.html">Доставка</a>
+                        <a href="uslugi.html #tremovca">Термоформовка коньков</a>
+                    </div>
+                    <div class="info">
+                        <a href="complect.html">Комплекты</a>
+                        <a href="acsess.html">Аксессуары</a>
+                        <a href="bags.html">Сумки</a>
+                    </div>
+                    <div class="info">
+                        <a href="about.html">О компании</a>
+                        <a href="sale.html">Акции</a>
+                        <a href="contact.html">Контакты</a>
+                    </div>
+                </div>
+                <div class="cont">
+                    <a href="tel:+78008008000">8(800)800-80-00</a>
+                    <img src="img/icon/seti.png" alt="">
+                    <p>Г. Казань, ул. Чистопольская, 7 </p>
+                </div>
+            </div>
+            <div class="f2">
+                <h3>©Исхакова Диана, 2024</h3>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>
