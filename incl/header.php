@@ -40,6 +40,7 @@
                 <?php endif; ?>
                 <a href="?page=bascet"><img src="img/icon/basket.png" alt="Корзина"></a>
             </div>
+
         </div>
     </div>
     <div class="menu" id="menu">
@@ -57,7 +58,7 @@
             <li><a href="?page=sale">Акции</a></li>
             <li><a href="?page=uslugi">Услуги</a></li>
             <div class="acc">
-            <?php if (isset($_SESSION['user'])):
+                <?php if (isset($_SESSION['user'])):
                     $userId = $_SESSION['user']['id'] ?? null;
                     $userRole = $_SESSION['user']['role'] ?? null;
 

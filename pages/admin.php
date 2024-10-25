@@ -1,11 +1,26 @@
-<?
+<?php
+session_start();
 global $connection;
-if(isset($_GET['deleteProduct'])){
-    $sql = "DELETE FROM products WHERE `products`.`id` = {$_GET['deleteProduct']}";
-    $connection->query($sql);
-    header('Location: ../index.php?page=admin');
+
+if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
+    header('Location: ../index.php?page=home');
+    exit();
 }
+
+$sql = "SELECT * FROM products";
+$query = $connection->query($sql);
+$products = $query->fetchAll(PDO::FETCH_ASSOC);
+
+
+$userId = $_SESSION['user']['id'];
+
+$sql = "SELECT * FROM user WHERE id = :id";
+$query = $connection->prepare($sql);
+$query->execute(['id' => $userId]);
+$user = $query->fetch(PDO::FETCH_ASSOC);
+
 ?>
+
 <div class="account w py">
     <h2>Панель администратора</h2>
     <div class="account_content py">
@@ -18,20 +33,30 @@ if(isset($_GET['deleteProduct'])){
                 <h3>Старый пароль</h3>
                 <h3>Новый пароль</h3>
             </div>
-            <form action="">
-                <input type="text">
-                <input type="text">
-                <input type="text">
-                <input type="text" disabled style="border: 2px solid gray;">
-                <input type="password">
-                <input type="password">
-                <button class="b">Изменить</button>
+            <form action="action/update_user.php" method="post">
+                <input type="text" name="name" placeholder="Имя" value="<?= htmlspecialchars($user['name'] ?? '') ?>">
+                <input type="text" name="surname" placeholder="Фамилия" value="<?= htmlspecialchars($user['surname'] ?? '') ?>">
+                <input type="text" name="pathname" placeholder="Отчество" value="<?= htmlspecialchars($user['pathname'] ?? '') ?>">
+                <input type="text" disabled style="border: 2px solid gray;" placeholder="Телефон" value="<?= htmlspecialchars($user['tel'] ?? '') ?>">
+                <input type="password" name="old_password" placeholder="Старый пароль">
+                <input type="password" name="new_password" placeholder="Новый пароль">
+                <?php
+                if (isset($_SESSION['errors'])) {
+                    foreach ($_SESSION['errors'] as $error) {
+                        echo "<p style='color: red;'>$error</p>";
+                    }
+                    unset($_SESSION['errors']);
+                }
+                ?>
+                <button type="submit" class="b">Изменить</button>
             </form>
         </div>
         <div class="acc_foto">
             <img src="img/account/acc.png" alt="">
             <h3>Добро пожаловать, Анна!</h3>
-            <button class="b">Выйти</button>
+            <form action="../action/logout.php" method="post" style="display: inline;">
+                <button type="submit" class="b">Выйти</button>
+            </form>
         </div>
     </div>
 </div>
@@ -93,13 +118,19 @@ if(isset($_GET['deleteProduct'])){
         </div>
     </div>
     <div class="tovars">
-        <div class="tovar">
-            <img src="img/tovar/komplect.png" alt="">
-            <h3>Термокомплект “Сигма”</h3>
-            <div class="tovar_info">
-                <a href="update.html" class="b">Изменить</a>
-                <a href="?page=admin&deleteProduct=<?=$products['id']?>" class="b">Удалить</a>
+        <?php foreach ($products as $product): ?>
+            <div class="tovar">
+                <img src="<?= htmlspecialchars($product['foto']) ?>" alt="<?= htmlspecialchars($product['name']) ?>">
+                <h3><?= htmlspecialchars($product['name']) ?></h3>
+                <div class="tovar_info">
+                    <a href="?page=update&id=<?= htmlspecialchars($product['id']) ?>" class="b">Изменить</a>
+                    <form action="action/delete_product.php" method="post" style="display: inline;">
+                        <input type="hidden" name="deleteProduct" value="<?= htmlspecialchars($product['id']) ?>">
+                        <a href="?page=confirm_delete&id=<?= htmlspecialchars($product['id']) ?>" class="b">Удалить</a>
+
+                    </form>
+                </div>
             </div>
-        </div>
+        <?php endforeach; ?>
     </div>
 </div>

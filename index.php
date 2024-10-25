@@ -4,7 +4,7 @@ session_start();
 // Подключение к базе данных
 $connection = require_once "connect/connect.php";
 if (!$connection) {
-    die('Ошибка подключения к базе данных.'); // Проверка подключения
+    die('Ошибка подключения к базе данных.');
 }
 ?>
 <!DOCTYPE html>
@@ -23,7 +23,6 @@ if (!$connection) {
     <?php
     include("incl/header.php");
 
-    // Массив маршрутов и соответствующих файлов
     $routes = [
         'tovar'      => 'pages/tovar.php',
         'edit'       => 'pages/edit.php',
@@ -43,16 +42,16 @@ if (!$connection) {
         'sign'       => 'pages/sign.php',
         'register'   => 'pages/register.php',
         'update'     => 'pages/update.php',
+        'confirm_delete'     => 'pages/confirm_delete.php',
+
     ];
 
-    // Определение страницы по параметру 'page'
-    $page = $_GET['page'] ?? 'home'; // По умолчанию - 'home'
+    $page = $_GET['page'] ?? 'home';
 
-    // Подключаем нужный файл или страницу 404
     if (array_key_exists($page, $routes)) {
         include $routes[$page];
     } else {
-        include 'pages/not.php'; // Страница ошибки (404)
+        include 'pages/not.php';
     }
 
     include("incl/footer.php");
