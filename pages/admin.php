@@ -53,7 +53,7 @@ $user = $query->fetch(PDO::FETCH_ASSOC);
         </div>
         <div class="acc_foto">
             <img src="img/account/acc.png" alt="">
-            <h3>Добро пожаловать, Анна!</h3>
+            <h3>Добро пожаловать, <?= htmlspecialchars($user['name'] ?? '') ?>!</h3>
             <form action="../action/logout.php" method="post" style="display: inline;">
                 <button type="submit" class="b">Выйти</button>
             </form>

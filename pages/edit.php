@@ -25,8 +25,10 @@ $generators = $query->fetchAll(PDO::FETCH_ASSOC);
 
 
 $generatorsByCategory = [];
-foreach ($generators as $generator) {
-    $generatorsByCategory[$generator['categori_id']][] = $generator;
+foreach ($categories as $category) {
+    $generatorsByCategory[$category['id']] = array_filter($generators, function ($generator) use ($category) {
+        return $generator['categori_id'] == $category['id'];
+    });
 }
 
 

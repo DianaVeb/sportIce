@@ -1,50 +1,42 @@
 <?php
-    session_start();
-    global $connection;
-    $product_id = isset($_GET['id']) ? (int)$_GET['id'] : null;
-    if ($product_id === null) {
-        echo "Товар не найден.";
-        exit;
-    }
+session_start();
+global $connection;
 
-    $sql = "SELECT * FROM products WHERE id = :id";
-    $query = $connection->prepare($sql);
-    $query->execute(['id' => $product_id]);
-    $product = $query->fetch(PDO::FETCH_ASSOC);
+$product_id = isset($_GET['id']) ? (int)$_GET['id'] : null;
+if ($product_id === null) {
+    echo "Товар не найден.";
+    exit;
+}
 
-    if (!$product) {
-        echo "Товар не найден.";
-        exit;
-    }
+$sql = "SELECT * FROM products WHERE id = :id";
+$query = $connection->prepare($sql);
+$query->execute(['id' => $product_id]);
+$product = $query->fetch(PDO::FETCH_ASSOC);
 
-    $sql = "SELECT * FROM categories";
-    $query = $connection->query($sql);
-    if (!$query) {
-        echo "Ошибка запроса: " . $connection->errorInfo()[2];
-    }
-    $categories = $query->fetchAll(PDO::FETCH_ASSOC);
+if (!$product) {
+    echo "Товар не найден.";
+    exit;
+}
 
-    $sql = "SELECT * FROM `type`";
-    $query = $connection->query($sql);
-    if (!$query) {
-        echo "Ошибка запроса: " . $connection->errorInfo()[2];
-    }
-    $types = $query->fetchAll(PDO::FETCH_ASSOC);
+$sql = "SELECT * FROM categories";
+$categories = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
-    $sql = "SELECT * FROM `generator`";
-    $query = $connection->query($sql);
-    if (!$query) {
-        echo "Ошибка запроса: " . $connection->errorInfo()[2];
-    }
-    $generators = $query->fetchAll(PDO::FETCH_ASSOC);
+$sql = "SELECT * FROM `type`";
+$types = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
+$sql = "SELECT * FROM `generator`";
+$generators = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
-    $generatorsByCategory = [];
-    foreach ($categories as $category) {
-        $generatorsByCategory[$category['id']] = array_filter($generators, function ($generator) use ($category) {
-            return $generator['categori_id'] == $category['id'];
-        });
-    }
+// Группируем типы и производителей по категории
+$typesByCategory = [];
+foreach ($types as $type) {
+    $typesByCategory[$type['categori_id']][] = $type;
+}
+
+$generatorsByCategory = [];
+foreach ($generators as $generator) {
+    $generatorsByCategory[$generator['categori_id']][] = $generator;
+}
 ?>
 
 <div class="form w py">
@@ -72,45 +64,30 @@
                 <h3>Категория</h3>
                 <select id="categorySelect" name="category_id" onchange="updateSelects()">
                     <option value="">Выберите категорию</option>
-                    <?php foreach ($categories as $category) { ?>
+                    <?php foreach ($categories as $category): ?>
                         <option value="<?= htmlspecialchars($category['id']) ?>" <?= $product['id_categor'] == $category['id'] ? 'selected' : '' ?>>
                             <?= htmlspecialchars($category['name']) ?>
                         </option>
-                    <?php } ?>
+                    <?php endforeach; ?>
                 </select>
             </div>
             <div class="input_block">
                 <h3>Вид</h3>
                 <select id="typeSelect" name="type_id">
                     <option value="">Выберите</option>
-                    <?php foreach ($types as $type) {
-                        if ($type['id_categor'] == $product['id_categor']) { ?>
-                            <option value="<?= htmlspecialchars($type['id']) ?>" <?= $product['id_type'] == $type['id'] ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($type['name']) ?>
-                            </option>
-                    <?php }
-                    } ?>
                 </select>
             </div>
             <div class="input_block">
                 <h3>Производитель</h3>
                 <select id="generatorSelect" name="generator_id">
                     <option value="">Выберите</option>
-                    <?php foreach ($generators as $generator) {
-                        if ($generator['id_categor'] == $product['id_categor']) { ?>
-                            <option value="<?= htmlspecialchars($generator['id']) ?>" <?= $product['id_generator'] == $generator['id'] ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($generator['name']) ?>
-                            </option>
-                    <?php }
-                    } ?>
                 </select>
             </div>
         </div>
 
         <div class="input_block">
             <h3>Фото</h3>
-            <?php if (!empty($product['image_path'])):
-            ?>
+            <?php if (!empty($product['image_path'])): ?>
                 <img src="<?= htmlspecialchars($product['image_path']) ?>" alt="Текущее изображение" style="max-width: 200px; max-height: 200px; display: block; margin-bottom: 10px;">
             <?php endif; ?>
             <input type="file" name="path" accept=".png, .jpg, .jpeg">
@@ -131,42 +108,43 @@
 </div>
 
 <script>
-    const typesByCategory = <?= json_encode($types) ?>;
+    const typesByCategory = <?= json_encode($typesByCategory) ?>;
     const generatorsByCategory = <?= json_encode($generatorsByCategory) ?>;
 
     function updateSelects() {
         const categorySelect = document.getElementById("categorySelect");
         const typeSelect = document.getElementById("typeSelect");
         const generatorSelect = document.getElementById("generatorSelect");
-        const selectedValue = categorySelect.value;
+        const selectedCategory = categorySelect.value;
 
+        // Очистка выпадающих списков
         typeSelect.innerHTML = "<option value=''>Выберите</option>";
         generatorSelect.innerHTML = "<option value=''>Выберите</option>";
 
-        typesByCategory.forEach(type => {
-            if (type.categori_id == selectedValue) {
+        // Обновляем вид (типы) по выбранной категории
+        if (typesByCategory[selectedCategory]) {
+            typesByCategory[selectedCategory].forEach(type => {
                 const opt = document.createElement("option");
                 opt.value = type.id;
-                opt.innerHTML = type.name;
+                opt.textContent = type.name;
                 typeSelect.appendChild(opt);
-            }
-        });
+            });
+        }
 
-
-        if (selectedValue in generatorsByCategory) {
-            generatorsByCategory[selectedValue].forEach(generator => {
+        // Обновляем производителей по выбранной категории
+        if (generatorsByCategory[selectedCategory]) {
+            generatorsByCategory[selectedCategory].forEach(generator => {
                 const opt = document.createElement("option");
                 opt.value = generator.id;
-                opt.innerHTML = generator.name;
+                opt.textContent = generator.name;
                 generatorSelect.appendChild(opt);
             });
         }
     }
 
-
     window.onload = function() {
-        const categorySelect = document.getElementById("categorySelect");
-        categorySelect.value = <?= json_encode($product['id_categor']) ?>;
+        // Устанавливаем начальные значения для категории, типа и производителя
+        document.getElementById("categorySelect").value = <?= json_encode($product['id_categor']) ?>;
         updateSelects();
 
         document.getElementById("typeSelect").value = <?= json_encode($product['id_type']) ?>;

@@ -6,39 +6,43 @@
         </div>
         <div class="input_block">
             <h3>Фамилия *</h3>
-            <input type="text" name="surname" value="<?php
-            if (isset($_SESSION['form_data']['surname'])) {
-                echo $_SESSION['form_data']['surname'];
-                unset($_SESSION['form_data']['surname']);
-            }
-            ?>">
+            <input type="text" name="surname"
+                value="<?php
+                        if (isset($_SESSION['form_data']['surname'])) {
+                            echo $_SESSION['form_data']['surname'];
+                            unset($_SESSION['form_data']['surname']);
+                        }
+                        ?>">
         </div>
         <div class="input_block">
             <h3>Имя *</h3>
-            <input type="text" name="name" value="<?php
-            if (isset($_SESSION['form_data']['name'])) {
-                echo $_SESSION['form_data']['name'];
-                unset($_SESSION['form_data']['name']);
-            }
-            ?>">
+            <input type="text" name="name"
+                value="<?php
+                        if (isset($_SESSION['form_data']['name'])) {
+                            echo $_SESSION['form_data']['name'];
+                            unset($_SESSION['form_data']['name']);
+                        }
+                        ?>">
         </div>
         <div class="input_block">
             <h3>Отчество</h3>
-            <input type="text" name="pathname" value="<?php
-            if (isset($_SESSION['form_data']['pathname'])) {
-                echo $_SESSION['form_data']['pathname'];
-                unset($_SESSION['form_data']['pathname']);
-            }
-            ?>">
+            <input type="text" name="pathname"
+                value="<?php
+                        if (isset($_SESSION['form_data']['pathname'])) {
+                            echo $_SESSION['form_data']['pathname'];
+                            unset($_SESSION['form_data']['pathname']);
+                        }
+                        ?>">
         </div>
         <div class="input_block">
             <h3>Телефон *</h3>
-            <input type="text" name="tel" value="<?php
-            if (isset($_SESSION['form_data']['tel'])) {
-                echo $_SESSION['form_data']['tel'];
-                unset($_SESSION['form_data']['tel']);
-            }
-            ?>">
+            <input type="text" name="tel"
+                value="<?php
+                        if (isset($_SESSION['form_data']['tel'])) {
+                            echo $_SESSION['form_data']['tel'];
+                            unset($_SESSION['form_data']['tel']);
+                        }
+                        ?>">
         </div>
         <div class="input_block">
             <h3>Пароль *</h3>

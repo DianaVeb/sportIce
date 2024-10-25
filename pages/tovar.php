@@ -1,121 +1,67 @@
-<!DOCTYPE html>
-<html lang="ru">
+<?php
+session_start();
+global $connection;
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sport Ice</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Kurale&display=swap" rel="stylesheet">
-    <script src="js/index.js" defer></script>
-</head>
+if (!$connection) {
+    die('Ошибка подключения к базе данных.');
+}
 
-<body>
-    <header>
-        <div class="header_content w">
-            <div class="logo">
-                <a href="index.html"><img src="img/logo/LOGO.png" alt="Логотип"></a>
-            </div>
-            <div class="nav">
-                <div class="burger-icon" id="burger-icon">
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                </div>
-                <nav>
-                    <a href="about.html">О нас</a>
-                    <div class="dropdown">
-                        <button onclick="myFunction('dropdown1')" class="dropbtn">Каталог</button>
-                        <div id="dropdown1" class="dropdown-content">
-                            <a href="complect.html">Комплекты</a>
-                            <a href="acsess.html">Аксессуары</a>
-                            <a href="bags.html">Сумки</a>
-                        </div>
-                    </div>
-                    <a href="dostavca.html">Доставка</a>
-                    <a href="sale.html">Акции</a>
-                    <a href="uslugi.html">Услуги</a>
-                </nav>
-                <div class="acc">
-                    <a href="sign.html"><img src="img/icon/account.png" alt="Аккаунт"></a>
-                    <a href="bascet.html"><img src="img/icon/basket.png" alt="Корзина"></a>
-                </div>
-            </div>
-        </div>
-        <div class="menu" id="menu">
-            <ul>
-                <li><a href="about.html">О нас</a></li>
-                <li class="dropdown">
-                    <button onclick="myFunction('dropdown2')" class="dropbtn">Каталог</button>
-                    <div id="dropdown2" class="dropdown-content">
-                        <a href="complect.html" style="color: black;">Комплекты</a>
-                        <a href="acsess.html" style="color: black;">Аксессуары</a>
-                        <a href="bags.html" style="color: black;">Сумки</a>
-                    </div>
-                </li>
-                <li><a href="dostavca.html">Доставка</a></li>
-                <li><a href="sale.html">Акции</a></li>
-                <li><a href="uslugi.html">Услуги</a></li>
-                <div class="acc">
-                    <a href="sign.html"><img src="img/icon/account.png" alt="Аккаунт"></a>
-                    <a href="bascet.html"><img src="img/icon/basket.png" alt="Корзина"></a>
-                </div>
-            </ul>
-        </div>
-    </header>
+$product_id = $_GET['id'] ?? null;
+if (!$product_id) {
+    header('Location: ../index.php?page=home');
+    exit();
 
-    <div class="blur-overlay" id="blur-overlay"></div>
-    <div class="bread w py">
-        <a href="index.html">Главная -> </a>
-        <a href="bags.html">Сумки -> </a>
-        <h3>Рюкзак “Голограмма”</h3>
+}
+
+$query = "SELECT * FROM products WHERE id = :id";
+$stmt = $connection->prepare($query);
+$stmt->bindParam(':id', $product_id, PDO::PARAM_INT);
+$stmt->execute();
+
+$product = $stmt->fetch(PDO::FETCH_ASSOC);
+if (!$product) {
+    header('Location: ../index.php?page=home');
+    exit();
+}
+
+$categoryQuery = "SELECT name FROM categories WHERE id = :id_categor";
+$categoryStmt = $connection->prepare($categoryQuery);
+$categoryStmt->bindParam(':id_categor', $product['id_categor'], PDO::PARAM_INT);
+$categoryStmt->execute();
+
+$category = $categoryStmt->fetch(PDO::FETCH_ASSOC);
+$category_name = $category['name'] ?? 'Категория не найдена';
+
+
+$generatorQuery = "SELECT name FROM generator WHERE id = :id_categor";
+$generatorStmt = $connection->prepare($generatorQuery);
+$generatorStmt->bindParam(':id_categor', $product['id_categor'], PDO::PARAM_INT);
+$generatorStmt->execute();
+
+$generator = $generatorStmt->fetch(PDO::FETCH_ASSOC);
+$generator_name = $generator['name'] ?? 'Производитель не найден';
+
+?>
+
+<div class="bread w py">
+    <a href="index.php">Главная -> </a>
+    <a href="/?page=bags&id_categor=<?= htmlspecialchars($product['id_categor']) ?>">
+        <?= htmlspecialchars($category_name) ?> ->
+    </a>
+    <h3><?= htmlspecialchars($product['name']) ?></h3>
+</div>
+
+<div class="tovar_about w py">
+    <div class="t_img">
+        <img src="<?= htmlspecialchars($product['foto']) ?>" alt="<?= htmlspecialchars($product['name']) ?>">
     </div>
-    <div class="tovar_about w py">
-        <div class="t_img">
-            <img src="img/tovar/bag.png" alt="">
+    <div class="t_a_info">
+        <h2><?= htmlspecialchars($product['name']) ?></h2>
+        <p><?= htmlspecialchars($product['description']) ?></p>
+        <div class="i">
+            <h1><?= htmlspecialchars($product['price']) ?>₽</h1>
+            <button class="b">В корзину</button>
         </div>
-        <div class="t_a_info">
-            <h2>Рюкзак “Голограмма”</h2>
-            <p>Рюкзак из поливинила с голографическим эффектом</p>
-            <div class="i">
-                <h1>1 800₽</h1>
-                <button class="b">В корзину</button>
-            </div>
-            <p>Производитель: ProStyleBags (Россия)</p>
-        </div>
+        <p>Производитель: <?= htmlspecialchars($generator_name) ?></p>
     </div>
-    <footer>
-        <div class="footer_content w">
-            <div class="f1">
-                <img src="img/logo/LOGO.png" alt="">
-                <div class="info_content">
-                    <div class="info">
-                        <a href="uslugi.html #zatochca">Заточка коньков</a>
-                        <a href="dostavca.html">Доставка</a>
-                        <a href="uslugi.html #tremovca">Термоформовка коньков</a>
-                    </div>
-                    <div class="info">
-                        <a href="complect.html">Комплекты</a>
-                        <a href="acsess.html">Аксессуары</a>
-                        <a href="bags.html">Сумки</a>
-                    </div>
-                    <div class="info">
-                        <a href="about.html">О компании</a>
-                        <a href="sale.html">Акции</a>
-                        <a href="contact.html">Контакты</a>
-                    </div>
-                </div>
-                <div class="cont">
-                    <a href="tel:+78008008000">8(800)800-80-00</a>
-                    <img src="img/icon/seti.png" alt="">
-                    <p>Г. Казань, ул. Чистопольская, 7 </p>
-                </div>
-            </div>
-            <div class="f2">
-                <h3>©Исхакова Диана, 2024</h3>
-            </div>
-        </div>
-    </footer>
-</body>
-
-</html>
+</div>

@@ -15,7 +15,7 @@ $oldPassword = getPostValue('old_password');
 $newPassword = getPostValue('new_password');
 $id = $_SESSION['user']['id'];
 
-$errors = validateInput($surname, $name, $middleName, $oldPassword, $connection, $id);
+$errors = validateInput($surname, $name, $oldPassword);
 
 if (!empty($errors)) {
     $_SESSION['errors'] = $errors;

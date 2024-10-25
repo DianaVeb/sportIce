@@ -1,232 +1,173 @@
-<!DOCTYPE html>
-<html lang="ru">
+<?php
+session_start();
+global $connection;
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sport Ice</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Kurale&display=swap" rel="stylesheet">
-    <script src="js/index.js" defer></script>
-</head>
+if (!$connection) {
+    die('Ошибка подключения к базе данных.');
+}
 
-<body>
-    <header>
-        <div class="header_content w">
-            <div class="logo">
-                <a href="index.html"><img src="img/logo/LOGO.png" alt="Логотип"></a>
-            </div>
-            <div class="nav">
-                <div class="burger-icon" id="burger-icon">
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                </div>
-                <nav>
-                    <a href="about.html">О нас</a>
-                    <div class="dropdown">
-                        <button onclick="myFunction('dropdown1')" class="dropbtn">Каталог</button>
-                        <div id="dropdown1" class="dropdown-content">
-                            <a href="complect.html">Комплекты</a>
-                            <a href="acsess.html">Аксессуары</a>
-                            <a href="bags.html">Сумки</a>
-                        </div>
-                    </div>
-                    <a href="dostavca.html">Доставка</a>
-                    <a href="sale.html">Акции</a>
-                    <a href="uslugi.html">Услуги</a>
-                </nav>
-                <div class="acc">
-                    <a href="sign.html"><img src="img/icon/account.png" alt="Аккаунт"></a>
-                    <a href="bascet.html"><img src="img/icon/basket.png" alt="Корзина"></a>
-                </div>
-            </div>
-        </div>
-        <div class="menu" id="menu">
-            <ul>
-                <li><a href="about.html">О нас</a></li>
-                <li class="dropdown">
-                    <button onclick="myFunction('dropdown2')" class="dropbtn">Каталог</button>
-                    <div id="dropdown2" class="dropdown-content">
-                        <a href="complect.html" style="color: black;">Комплекты</a>
-                        <a href="acsess.html" style="color: black;">Аксессуары</a>
-                        <a href="bags.html" style="color: black;">Сумки</a>
-                    </div>
-                </li>
-                <li><a href="dostavca.html">Доставка</a></li>
-                <li><a href="sale.html">Акции</a></li>
-                <li><a href="uslugi.html">Услуги</a></li>
-                <div class="acc">
-                    <a href="sign.html"><img src="img/icon/account.png" alt="Аккаунт"></a>
-                    <a href="bascet.html"><img src="img/icon/basket.png" alt="Корзина"></a>
-                </div>
-            </ul>
-        </div>
-    </header>
+$id_categor = 1;
+$searchQuery = $_GET['search'] ?? '';
+$id_generator = $_GET['generator'] ?? '';
+$id_type = $_GET['type'] ?? '';
+$page = isset($_GET['page_num']) ? (int)$_GET['page_num'] : 1;
+$limit = 6;
+$offset = ($page - 1) * $limit;
 
-    <div class="blur-overlay" id="blur-overlay"></div>
-    <div class="banner_bag">
-        <div class="b_b_content w">
-            <h1>Сумки</h1>
-        </div>
+$query = "SELECT * FROM products WHERE id_categor = :id_categor";
+$params = [':id_categor' => $id_categor];
+
+if (!empty($searchQuery)) {
+    $query .= " AND name LIKE :search";
+    $params[':search'] = '%' . $searchQuery . '%';
+}
+
+if (!empty($id_generator)) {
+    $query .= " AND id_generator = :id_generator";
+    $params[':id_generator'] = $id_generator;
+}
+
+if (!empty($id_type)) {
+    $query .= " AND id_type = :id_type";
+    $params[':id_type'] = $id_type;
+}
+
+$countQuery = str_replace("SELECT *", "SELECT COUNT(*) as total", $query);
+$stmt = $connection->prepare($countQuery);
+$stmt->execute($params);
+$totalProducts = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+$totalPages = ceil($totalProducts / $limit);
+
+$query .= " LIMIT :limit OFFSET :offset";
+$params[':limit'] = $limit;
+$params[':offset'] = $offset;
+
+$stmt = $connection->prepare($query);
+$stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+$stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+$stmt->execute($params);
+$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$queryGenerators = "SELECT * FROM generator WHERE id = :id_categor";
+$stmtGenerators = $connection->prepare($queryGenerators);
+$stmtGenerators->execute([':id_categor' => $id_categor]);
+$generators = $stmtGenerators->fetchAll(PDO::FETCH_ASSOC);
+
+$queryTypes = "SELECT * FROM type WHERE id = :id_categor";
+$stmtTypes = $connection->prepare($queryTypes);
+$stmtTypes->execute([':id_categor' => $id_categor]);
+$types = $stmtTypes->fetchAll(PDO::FETCH_ASSOC);
+?>
+
+<div class="banner_bag">
+    <div class="b_b_content w">
+        <h1>Сумки</h1>
     </div>
+</div>
+<div class="bb w py">
+    <div class="bb_h2">
+        <h2>Сумки</h2>
+    </div>
+    <div class="bb_filt">
+        <form action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="get">
+            <input type="hidden" name="page" value="complect" />
+            <input type="text" id="search" name="search" placeholder="Введите название товара" value="<?= htmlspecialchars($searchQuery) ?>" />
+            <button class="b">Поиск</button>
+        </form>
 
-    <div class="bb w py">
-        <div class="bb_h2">
-            <h2>Сумки</h2>
-        </div>
-        <div class="bb_filt">
-            <form action="">
-                <input type="text" id="search" placeholder="Введите название товара" />
-                <button class="b">Поиск</button>
-            </form>
-            <button id="open-modal">Фильтр</button>
-            <div id="modal">
-                <div id="modal-content">
-                    <h2>Фильтр</h2>
+        <button id="open-modal">Фильтр</button>
+        <div id="modal">
+            <div id="modal-content">
+                <h2>Фильтр</h2>
+                <form action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="get">
+                    <input type="hidden" name="page" value="complect" />
+
                     <div class="filts">
                         <div class="filt">
                             <h3>Производитель:</h3>
                             <div class="fil">
-                                <input type="radio">
-                                <p>Голограмма</p>
+                                <input type="radio" name="generator" value="" <?= $id_generator === '' ? 'checked' : '' ?>> Все<br>
                             </div>
-                            <div class="fil">
-                                <input type="radio">
-                                <p>Флип</p>
-                            </div>
-                            <div class="fil">
-                                <input type="radio">
-                                <p>Бильман</p>
-                            </div>
-                            <div class="fil">
-                                <input type="radio">
-                                <p>RUNA</p>
-                            </div>
-                            <div class="fil">
-                                <input type="radio">
-                                <p>MIX</p>
-                            </div>
+                            <?php foreach ($generators as $generator): ?>
+                                <div class="fil">
+                                    <input type="radio" name="generator" value="<?= htmlspecialchars($generator['id']) ?>" <?= $id_generator === (string)$generator['id'] ? 'checked' : '' ?>>
+                                    <?= htmlspecialchars($generator['name']) ?><br>
+                                </div>
+                            <?php endforeach; ?>
                         </div>
+
                         <div class="filt">
                             <h3>Вид:</h3>
                             <div class="fil">
-                                <input type="radio">
-                                <p>Косметички и оргайзеры</p>
+                                <input type="radio" name="type" value="" <?= $id_type === '' ? 'checked' : '' ?>> Все<br>
                             </div>
-                            <div class="fil">
-                                <input type="radio">
-                                <p>На колесиках</p>
-                            </div>
-                            <div class="fil">
-                                <input type="radio">
-                                <p>На пояс</p>
-                            </div>
-                            <div class="fil">
-                                <input type="radio">
-                                <p>Мешки для обуви</p>
-                            </div>
-                            <div class="fil">
-                                <input type="radio">
-                                <p>Портпледы</p>
-                            </div>
-                            <div class="fil">
-                                <input type="radio">
-                                <p>Рюкзаки</p>
-                            </div>
+                            <?php foreach ($types as $type): ?>
+                                <div class="fil">
+                                    <input type="radio" name="type" value="<?= htmlspecialchars($type['id']) ?>" <?= $id_type === (string)$type['id'] ? 'checked' : '' ?>>
+                                    <?= htmlspecialchars($type['name']) ?><br>
+                                </div>
+                            <?php endforeach; ?>
                         </div>
                     </div>
+
                     <div class="f_button">
-                        <button class="b">Применить</button>
-                        <button class="b">Сбросить</button>
+                        <button type="submit" class="b">Применить</button>
+                        <button type="button" class="b" id="reset-filters">Сбросить</button>
                     </div>
-                    <button id="close-modal">X</button>
-                </div>
-            </div>
-        </div>
-        <div class="tovars">
-            <div class="tovar">
-                <a href="tovar.html"><img src="img/tovar/bag.png" alt=""></a>
-                <h3>Рюкзак “Голограмма”</h3>
-                <div class="tovar_info">
-                    <p>1 800₽</p>
-                    <button class="b">В корзину</button>
-                </div>
-            </div>
-            <div class="tovar">
-                <a href="tovar.html"><img src="img/tovar/bag.png" alt=""></a>
-                <h3>Рюкзак “Голограмма”</h3>
-                <div class="tovar_info">
-                    <p>1 800₽</p>
-                    <button class="b">В корзину</button>
-                </div>
-            </div>
-            <div class="tovar">
-                <a href="tovar.html"><img src="img/tovar/bag.png" alt=""></a>
-                <h3>Рюкзак “Голограмма”</h3>
-                <div class="tovar_info">
-                    <p>1 800₽</p>
-                    <button class="b">В корзину</button>
-                </div>
-            </div>
-            <div class="tovar">
-                <a href="tovar.html"><img src="img/tovar/bag.png" alt=""></a>
-                <h3>Рюкзак “Голограмма”</h3>
-                <div class="tovar_info">
-                    <p>1 800₽</p>
-                    <button class="b">В корзину</button>
-                </div>
-            </div>
-            <div class="tovar">
-                <a href="tovar.html"><img src="img/tovar/bag.png" alt=""></a>
-                <h3>Рюкзак “Голограмма”</h3>
-                <div class="tovar_info">
-                    <p>1 800₽</p>
-                    <button class="b">В корзину</button>
-                </div>
-            </div>
-            <div class="tovar">
-                <a href="tovar.html"><img src="img/tovar/bag.png" alt=""></a>
-                <h3>Рюкзак “Голограмма”</h3>
-                <div class="tovar_info">
-                    <p>1 800₽</p>
-                    <button class="b">В корзину</button>
-                </div>
+                </form>
+                <button id="close-modal">X</button>
             </div>
         </div>
     </div>
-    <footer>
-        <div class="footer_content w">
-            <div class="f1">
-                <img src="img/logo/LOGO.png" alt="">
-                <div class="info_content">
-                    <div class="info">
-                        <a href="uslugi.html #zatochca">Заточка коньков</a>
-                        <a href="dostavca.html">Доставка</a>
-                        <a href="uslugi.html #tremovca">Термоформовка коньков</a>
-                    </div>
-                    <div class="info">
-                        <a href="complect.html">Комплекты</a>
-                        <a href="acsess.html">Аксессуары</a>
-                        <a href="bags.html">Сумки</a>
-                    </div>
-                    <div class="info">
-                        <a href="about.html">О компании</a>
-                        <a href="sale.html">Акции</a>
-                        <a href="contact.html">Контакты</a>
-                    </div>
-                </div>
-                <div class="cont">
-                    <a href="tel:+78008008000">8(800)800-80-00</a>
-                    <img src="img/icon/seti.png" alt="">
-                    <p>Г. Казань, ул. Чистопольская, 7 </p>
-                </div>
-            </div>
-            <div class="f2">
-                <h3>©Исхакова Диана, 2024</h3>
-            </div>
-        </div>
-    </footer>
-</body>
 
-</html>
+    <div class="tovars">
+        <?php foreach ($products as $product): ?>
+            <div class="tovar">
+                <a href="/?page=tovar&id=<?= htmlspecialchars($product['id']) ?>">
+                    <img src="<?= htmlspecialchars($product['foto']) ?>" alt="<?= htmlspecialchars($product['name']) ?>">
+                </a>
+                <h3><?= htmlspecialchars($product['name']) ?></h3>
+                <div class="tovar_info">
+                    <p><?= htmlspecialchars($product['price']) ?>₽</p>
+                    <button class="b">В корзину</button>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+    <div class="pagination">
+        <?php if ($page > 1): ?>
+            <a href="?page=bags&page_num=<?= $page - 1; ?>" class="prev">Назад</a>
+        <?php endif; ?>
+
+        <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+            <a href="?page=bags&page_num=<?= $i; ?>" class="<?= $i === $page ? 'active' : ''; ?>">
+                <?= $i; ?>
+            </a>
+        <?php endfor; ?>
+
+        <?php if ($page < $totalPages): ?>
+            <a href="?page=bags&page_num=<?= $page + 1; ?>" class="next">Вперед</a>
+        <?php endif; ?>
+    </div>
+</div>
+
+<script>
+    document.getElementById('open-modal').onclick = function() {
+        document.getElementById('modal').style.display = 'block';
+    };
+
+    document.getElementById('close-modal').onclick = function() {
+        document.getElementById('modal').style.display = 'none';
+    };
+
+    window.onclick = function(event) {
+        if (event.target === document.getElementById('modal')) {
+            document.getElementById('modal').classList.remove('active');
+        }
+    };
+
+    document.getElementById('reset-filters').onclick = function() {
+        document.querySelector('input[name="generator"][value=""]').checked = true;
+        document.querySelector('input[name="type"][value=""]').checked = true;
+    };
+</script>

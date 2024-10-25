@@ -45,7 +45,7 @@
     </div>
     <div class="menu" id="menu">
         <ul>
-            <li><a href="about.html">О нас</a></li>
+            <li><a href="about.php">О нас</a></li>
             <li class="dropdown">
                 <button onclick="myFunction('dropdown2')" class="dropbtn">Каталог</button>
                 <div id="dropdown2" class="dropdown-content">
