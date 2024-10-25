@@ -11,8 +11,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
-
-
 $tel = getPostValue('tel');
 $password = getPostValue('password');
 $_SESSION['form_data'] = compact('tel');
@@ -26,7 +24,7 @@ if (!empty($errors)) {
     exit();
 }
 
-$user = authenticateUser($tel, $password, $connection); 
+$user = authenticateUser($tel, $password, $connection);
 
 if (!$user) {
     $_SESSION['errors']['auth'] = 'Неверный телефон или пароль!';
@@ -46,11 +44,13 @@ header('Location: ../index.php?page=home');
 exit();
 
 
-function getPostValue($key) {
+function getPostValue($key)
+{
     return htmlspecialchars(trim($_POST[$key] ?? ''));
 }
 
-function validateLoginInput($tel, $password) {
+function validateLoginInput($tel, $password)
+{
     $errors = [];
 
     if (empty($tel)) {
@@ -66,10 +66,11 @@ function validateLoginInput($tel, $password) {
     return $errors;
 }
 
-function authenticateUser($tel, $password, $connection) {
+function authenticateUser($tel, $password, $connection)
+{
     $stmt = $connection->prepare("SELECT * FROM user WHERE tel = ?");
     $stmt->execute([$tel]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC); 
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     return $user && password_verify($password, $user['password']) ? $user : false;
 }

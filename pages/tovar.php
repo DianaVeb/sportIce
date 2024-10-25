@@ -10,7 +10,6 @@ $product_id = $_GET['id'] ?? null;
 if (!$product_id) {
     header('Location: ../index.php?page=home');
     exit();
-
 }
 
 $query = "SELECT * FROM products WHERE id = :id";
@@ -60,7 +59,10 @@ $generator_name = $generator['name'] ?? 'Производитель не най�
         <p><?= htmlspecialchars($product['description']) ?></p>
         <div class="i">
             <h1><?= htmlspecialchars($product['price']) ?>₽</h1>
-            <button class="b">В корзину</button>
+            <form action="../action/add_to_basket.php" method="POST">
+                <input type="hidden" name="product_id" value="<?= $product_id ?>">
+                <button type="submit" class="b">В корзину</button>
+            </form>
         </div>
         <p>Производитель: <?= htmlspecialchars($generator_name) ?></p>
     </div>

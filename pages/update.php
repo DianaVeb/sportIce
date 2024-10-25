@@ -27,7 +27,6 @@ $types = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 $sql = "SELECT * FROM `generator`";
 $generators = $connection->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
-// Группируем типы и производителей по категории
 $typesByCategory = [];
 foreach ($types as $type) {
     $typesByCategory[$type['categori_id']][] = $type;
@@ -117,11 +116,9 @@ foreach ($generators as $generator) {
         const generatorSelect = document.getElementById("generatorSelect");
         const selectedCategory = categorySelect.value;
 
-        // Очистка выпадающих списков
         typeSelect.innerHTML = "<option value=''>Выберите</option>";
         generatorSelect.innerHTML = "<option value=''>Выберите</option>";
 
-        // Обновляем вид (типы) по выбранной категории
         if (typesByCategory[selectedCategory]) {
             typesByCategory[selectedCategory].forEach(type => {
                 const opt = document.createElement("option");
@@ -131,7 +128,6 @@ foreach ($generators as $generator) {
             });
         }
 
-        // Обновляем производителей по выбранной категории
         if (generatorsByCategory[selectedCategory]) {
             generatorsByCategory[selectedCategory].forEach(generator => {
                 const opt = document.createElement("option");
@@ -143,7 +139,6 @@ foreach ($generators as $generator) {
     }
 
     window.onload = function() {
-        // Устанавливаем начальные значения для категории, типа и производителя
         document.getElementById("categorySelect").value = <?= json_encode($product['id_categor']) ?>;
         updateSelects();
 
