@@ -40,11 +40,18 @@ $generatorStmt->execute();
 $generator = $generatorStmt->fetch(PDO::FETCH_ASSOC);
 $generator_name = $generator['name'] ?? 'Производитель не найден';
 
+$pageMap = [
+    1 => 'bags',   
+    2 => 'access',
+    3 => 'complect'
+];
+
+$targetPage = $pageMap[$product['id_categor']] ?? 'bags';
 ?>
 
 <div class="bread w py">
     <a href="index.php">Главная -> </a>
-    <a href="/?page=bags&id_categor=<?= htmlspecialchars($product['id_categor']) ?>">
+    <a href="/?page=<?= htmlspecialchars($targetPage) ?>&id_categor=<?= htmlspecialchars($product['id_categor']) ?>">
         <?= htmlspecialchars($category_name) ?> ->
     </a>
     <h3><?= htmlspecialchars($product['name']) ?></h3>

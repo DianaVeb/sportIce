@@ -130,7 +130,10 @@ $types = $stmtTypes->fetchAll(PDO::FETCH_ASSOC);
                 <h3><?= htmlspecialchars($product['name']) ?></h3>
                 <div class="tovar_info">
                     <p><?= htmlspecialchars($product['price']) ?>₽</p>
-                    <button class="b">В корзину</button>
+                    <form action="../action/add_to_basket.php" method="POST">
+                        <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
+                        <button type="submit" class="b">В корзину</button>
+                    </form>
                 </div>
             </div>
         <?php endforeach; ?>

@@ -70,7 +70,7 @@ $types = $stmtTypes->fetchAll(PDO::FETCH_ASSOC);
     </div>
     <div class="bb_filt">
         <form action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="get">
-            <input type="hidden" name="page" value="complect" />
+            <input type="hidden" name="page" value="bags" />
             <input type="text" id="search" name="search" placeholder="Введите название товара" value="<?= htmlspecialchars($searchQuery) ?>" />
             <button class="b">Поиск</button>
         </form>
@@ -80,7 +80,7 @@ $types = $stmtTypes->fetchAll(PDO::FETCH_ASSOC);
             <div id="modal-content">
                 <h2>Фильтр</h2>
                 <form action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="get">
-                    <input type="hidden" name="page" value="complect" />
+                    <input type="hidden" name="page" value="bags" />
 
                     <div class="filts">
                         <div class="filt">
@@ -129,7 +129,10 @@ $types = $stmtTypes->fetchAll(PDO::FETCH_ASSOC);
                 <h3><?= htmlspecialchars($product['name']) ?></h3>
                 <div class="tovar_info">
                     <p><?= htmlspecialchars($product['price']) ?>₽</p>
-                    <button class="b">В корзину</button>
+                    <form action="../action/add_to_basket.php" method="POST">
+                <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
+                <button type="submit" class="b">В корзину</button>
+            </form>
                 </div>
             </div>
         <?php endforeach; ?>

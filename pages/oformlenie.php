@@ -6,7 +6,7 @@ if (!$connection) {
     die('Ошибка подключения к базе данных.');
 }
 
-$user_id = $_SESSION['user_id'] ?? null;
+$user_id = $_SESSION['user']['id'] ?? null;
 $basketItems = [];
 $totalAmount = 0;
 
@@ -23,7 +23,6 @@ if ($user_id) {
 } else {
     if (isset($_SESSION['basket']) && !empty($_SESSION['basket'])) {
         $productIds = array_keys($_SESSION['basket']);
-
         $query = "SELECT * FROM products WHERE id IN (" . implode(',', array_fill(0, count($productIds), '?')) . ")";
         $stmt = $connection->prepare($query);
         $stmt->execute($productIds);
@@ -45,24 +44,50 @@ if ($user_id) {
 $totalAmount = array_sum(array_column($basketItems, 'total_price'));
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
     $fullname = $_POST['fullname'];
     $deliveryMethod = $_POST['delivery_method'];
     $address = $deliveryMethod === 'delivery' ? $_POST['address'] : '';
 
-    // Здесь код для сохранения заказа в базу данных
-    // Примерно так:
-    // $insertQuery = "INSERT INTO orders (user_id, fullname, delivery_method, address, total_amount) VALUES (:user_id, :fullname, :delivery_method, :address, :total_amount)";
-    // $stmt = $connection->prepare($insertQuery);
-    // $stmt->execute(['user_id' => $user_id, 'fullname' => $fullname, 'delivery_method' => $deliveryMethod, 'address' => $address, 'total_amount' => $totalAmount]);
+    $telQuery = "SELECT tel FROM user WHERE id = :user_id";
+    $telStmt = $connection->prepare($telQuery);
+    $telStmt->execute(['user_id' => $user_id]);
+    $tel = $telStmt->fetchColumn();
 
-    echo "<script>
+    $basketQuery = "SELECT id FROM basket WHERE user_id = :user_id LIMIT 1";
+    $basketStmt = $connection->prepare($basketQuery);
+    $basketStmt->execute(['user_id' => $user_id]);
+    $basketId = $basketStmt->fetchColumn();
+
+    if (!$basketId) {
+        die('Корзина пользователя не найдена.');
+    }
+
+
+    try {
+        $insertQuery = "
+        INSERT INTO placing_order (full_name, basket_id, address, tel)
+        VALUES (:full_name, :basket_id, :address, :tel)
+    ";
+        $stmt = $connection->prepare($insertQuery);
+        $stmt->execute([
+            'full_name' => $fullname,
+            'basket_id' => $basketId,
+            'address' => $address,
+            'tel' => $tel
+        ]);
+
+        echo "<script>
             window.onload = function() {
                 showSuccessModal('$fullname', '$deliveryMethod', '$address', '$totalAmount');
             };
           </script>";
+    } catch (PDOException $e) {
+        die('Ошибка при добавлении заказа: ' . $e->getMessage());
+    }
 }
+
 ?>
+
 
 <div class="ofr w py">
     <h2>Оформление заказа</h2>
@@ -121,83 +146,83 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 
 <style>
-.modal {
-    display: none; 
-    position: fixed; 
-    z-index: 1; 
-    left: 0;
-    top: 0;
-    width: 100%; 
-    height: 100%; 
-    overflow: auto; 
-    background-color: rgb(0,0,0); 
-    background-color: rgba(0,0,0,0.4); 
-    padding-top: 60px; 
-}
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgb(0, 0, 0);
+        background-color: rgba(0, 0, 0, 0.4);
+        padding-top: 60px;
+    }
 
-.modal-content {
-    background-color: #fefefe;
-    margin: 5% auto; 
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%; 
-}
+    .modal-content {
+        background-color: #fefefe;
+        margin: 5% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+    }
 
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
 
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
 </style>
 <script>
-function showSuccessModal(fullname, deliveryMethod, address, totalAmount) {
-    const modalDetails = document.getElementById('modalDetails');
-    modalDetails.innerHTML = `ФИО: ${fullname}<br>Способ доставки: ${deliveryMethod}${deliveryMethod === 'delivery' ? `<br>Адрес: ${address}` : ''}<br>Итоговая сумма: ${totalAmount} ₽`;
-    document.getElementById('successModal').style.display = 'block';
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    const closeModal = document.getElementById('closeModal');
-    const okButton = document.getElementById('okButton');
-    const addressField = document.getElementById('address_field');
-    const addressInput = document.getElementById('address_input');
-
-    closeModal.onclick = function() {
-        document.getElementById('successModal').style.display = 'none';
+    function showSuccessModal(fullname, deliveryMethod, address, totalAmount) {
+        const modalDetails = document.getElementById('modalDetails');
+        modalDetails.innerHTML = `ФИО: ${fullname}<br>Способ доставки: ${deliveryMethod}${deliveryMethod === 'delivery' ? `<br>Адрес: ${address}` : ''}<br>Итоговая сумма: ${totalAmount} ₽`;
+        document.getElementById('successModal').style.display = 'block';
     }
 
-    okButton.onclick = function() {
-        document.getElementById('successModal').style.display = 'none';
-        window.location.href = 'index.php'; 
-    }
+    document.addEventListener('DOMContentLoaded', () => {
+        const closeModal = document.getElementById('closeModal');
+        const okButton = document.getElementById('okButton');
+        const addressField = document.getElementById('address_field');
+        const addressInput = document.getElementById('address_input');
 
-
-    const deliveryMethodRadios = document.querySelectorAll('input[name="delivery_method"]');
-    deliveryMethodRadios.forEach(radio => {
-        radio.addEventListener('change', function() {
-            if (this.value === 'pickup') {
-                addressField.style.display = 'none';
-                addressInput.value = '';
-                addressInput.removeAttribute('required'); 
-            } else {
-                addressField.style.display = 'block';
-                addressInput.setAttribute('required', 'required'); 
-            }
-        });
-    });
-
-    window.onclick = function(event) {
-        if (event.target == document.getElementById('successModal')) {
+        closeModal.onclick = function() {
             document.getElementById('successModal').style.display = 'none';
         }
-    }
-});
+
+        okButton.onclick = function() {
+            document.getElementById('successModal').style.display = 'none';
+            window.location.href = 'index.php';
+        }
+
+
+        const deliveryMethodRadios = document.querySelectorAll('input[name="delivery_method"]');
+        deliveryMethodRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.value === 'pickup') {
+                    addressField.style.display = 'none';
+                    addressInput.value = '';
+                    addressInput.removeAttribute('required');
+                } else {
+                    addressField.style.display = 'block';
+                    addressInput.setAttribute('required', 'required');
+                }
+            });
+        });
+
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('successModal')) {
+                document.getElementById('successModal').style.display = 'none';
+            }
+        }
+    });
 </script>

@@ -19,7 +19,21 @@ $query = $connection->prepare($sql);
 $query->execute(['id' => $userId]);
 $user = $query->fetch(PDO::FETCH_ASSOC);
 
+
+$orderSql = "
+    SELECT po.id AS order_id, po.full_name, po.address, po.tel, po.created_at, 
+           p.id AS product_id, p.name AS product_name, p.price, b.quantity
+    FROM placing_order po
+    JOIN basket b ON po.basket_id = b.id
+    JOIN products p ON b.product_id = p.id
+    ORDER BY po.created_at DESC
+";
+$orderQuery = $connection->prepare($orderSql);
+$orderQuery->execute();
+$orders = $orderQuery->fetchAll(PDO::FETCH_ASSOC);
 ?>
+
+
 
 <div class="account w py">
     <h2>Панель администратора</h2>
@@ -66,71 +80,26 @@ $user = $query->fetch(PDO::FETCH_ASSOC);
     <button class="b" id="tovars">Работа с товарами</button>
 </div>
 
-<div class="zacaz w py" id="zacaz">
+<div class="zacaz w py">
     <h2>Заказы</h2>
     <div class="tovars">
-        <div class="tovar">
-            <img src="img/tovar/komplect.png" alt="">
-            <h3>Термокомплект “Сигма”</h3>
-            <div class="tovar_info">
-                <p>5 900 ₽</p>
-                <button id="open-modal">Подробнее</button>
-                <div id="modal">
-                    <div id="modal-content">
-                        <h2>Подробнее о заказе</h2>
-                        <div class="filt">
-                            <h3>Название товара:</h3>
-                            <p>Термокомплект “Сигма” 1 шт.</p>
-                        </div>
-                        <div class="filt">
-                            <h3>ФИО покупателя:</h3>
-                            <p>Иванов Иван Иванович</p>
-                        </div>
-                        <div class="filt">
-                            <h3>Дата:</h3>
-                            <p>09.10.2024</p>
-                        </div>
-                        <div class="filt">
-                            <h3>Способ получения:</h3>
-                            <p>Доставка</p>
-                        </div>
-                        <div class="filt">
-                            <h3>Адрес:</h3>
-                            <p>лавомтлавоми</p>
-                        </div>
-                        <div class="filt">
-                            <h3>Сумма:</h3>
-                            <p>1 500 ₽</p>
-                        </div>
-                        <button id="close-modal">X</button>
-                    </div>
+        <?php if (!empty($orders)): ?>
+            <?php foreach ($orders as $order): ?>
+                <div class="tovar">
+                    <h3>Заказ №<?= htmlspecialchars($order['order_id']) ?></h3>
+                    <p>Дата: <?= htmlspecialchars($order['created_at']) ?></p>
+                    <h4>Товар: <?= htmlspecialchars($order['product_name']) ?></h4>
+                    <p>Цена: <?= htmlspecialchars($order['price']) ?> ₽</p>
+                    <p>Количество: <?= htmlspecialchars($order['quantity']) ?></p>
+                    <p>Получатель: <?= htmlspecialchars($order['full_name']) ?></p>
+                    <?php if (!empty($order['address'])): ?>
+                        <p>Адрес доставки: <?= htmlspecialchars($order['address']) ?></p>
+                    <?php endif; ?>
+                    <button class="b">Повторить</button>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="work_tovar w py" style="display: none;" id="work_tovar">
-    <div class="admin_opis">
-        <h2>Работа с товарами</h2>
-        <div class="edit_tovar">
-            <a href="?page=edit" class="b">Добавить товар</a>
-        </div>
-    </div>
-    <div class="tovars">
-        <?php foreach ($products as $product): ?>
-            <div class="tovar">
-                <img src="<?= htmlspecialchars($product['foto']) ?>" alt="<?= htmlspecialchars($product['name']) ?>">
-                <h3><?= htmlspecialchars($product['name']) ?></h3>
-                <div class="tovar_info">
-                    <a href="?page=update&id=<?= htmlspecialchars($product['id']) ?>" class="b">Изменить</a>
-                    <form action="action/delete_product.php" method="post" style="display: inline;">
-                        <input type="hidden" name="deleteProduct" value="<?= htmlspecialchars($product['id']) ?>">
-                        <a href="?page=confirm_delete&id=<?= htmlspecialchars($product['id']) ?>" class="b">Удалить</a>
-
-                    </form>
-                </div>
-            </div>
-        <?php endforeach; ?>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>У вас пока нет заказов.</p>
+        <?php endif; ?>
     </div>
 </div>
